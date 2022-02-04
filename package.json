@@ -1,0 +1,28 @@
+{
+  "name": "passport-practice",
+  "version": "1.0.0",
+  "description": "### **Install**",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neungs-2/passport-practice.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/neungs-2/passport-practice/issues"
+  },
+  "homepage": "https://github.com/neungs-2/passport-practice#readme",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.2"
+  },
+  "devDependencies": {
+    "dotenv": "^16.0.0",
+    "nodemon": "^2.0.15"
+  }
+}
