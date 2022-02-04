@@ -2,5 +2,5 @@
 
 ### **Install**
 
-- `$ npm i express ejs`
+- `$ npm i express ejs bcrypt`
 - `$ npm i --save-dev nodemon dotenv`
