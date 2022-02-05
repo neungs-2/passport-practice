@@ -8,6 +8,7 @@ const bcrypt = require('bcrypt');
 const passport = require('passport');
 const flash = require('express-flash');
 const session = require('express-session');
+const methodOverride = require('method-override');
 
 const initializePassport = require('./passport-config');
 initializePassport(
@@ -30,17 +31,19 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(methodOverride('_method'));
 
-app.get('/', (req, res) => {
-  res.render('index.ejs', { name: 'Logan' });
+app.get('/', checkAuthenticated, (req, res) => {
+  res.render('index.ejs', { name: req.user.name });
 });
 
-app.get('/login', (req, res) => {
+app.get('/login', checkNotAuthenticated, (req, res) => {
   res.render('login.ejs');
 });
 
 app.post(
   '/login',
+  checkNotAuthenticated,
   passport.authenticate('local', {
     successRedirect: '/',
     failureRedirect: '/login',
@@ -48,11 +51,11 @@ app.post(
   })
 );
 
-app.get('/register', (req, res) => {
+app.get('/register', checkNotAuthenticated, (req, res) => {
   res.render('register.ejs');
 });
 
-app.post('/register', async (req, res) => {
+app.post('/register', checkNotAuthenticated, async (req, res) => {
   try {
     const hashedPassword = await bcrypt.hash(req.body.password, 10);
     users.push({
@@ -67,5 +70,25 @@ app.post('/register', async (req, res) => {
   }
   console.log(users);
 });
+
+app.delete('/logout', (req, res) => {
+  req.logOut();
+  res.redirect('/login');
+});
+
+// 로그인 이전 user.name이 없으므로 index 페이지 오류
+// 로그인 X이면 로그인 페이지로 리다이렉트 시키는 미들웨어
+// 귀찮다면 옵셔널체이닝으로 그냥 이름 표시 안하는 방법도 괜찮을 것 같음
+function checkAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return next();
+  res.redirect('/login');
+}
+
+// 로그인 완료 시 로그인/회원가입 페이지로 들어가지 못하게 하기 위한 미들웨어
+// 로그인 상태로 로그인/회원가입 페이지 접근 시 index 페이지로 리다이렉트
+function checkNotAuthenticated(req, res, next) {
+  if (req.isAuthenticated()) return res.redirect('/');
+  next();
+}
 
 app.listen(3000);

@@ -2,5 +2,5 @@
 
 ### **Install**
 
-- `$ npm i express ejs bcrypt passport passport-local express-session express-flash`
+- `$ npm i express ejs bcrypt passport passport-local express-session express-flash method-override`
 - `$ npm i --save-dev nodemon dotenv`
